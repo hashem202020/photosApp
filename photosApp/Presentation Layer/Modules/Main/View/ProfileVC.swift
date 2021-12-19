@@ -29,7 +29,7 @@ class ProfileVC: UIViewController {
         uiHandler()
         bindData()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
     }
@@ -50,7 +50,7 @@ class ProfileVC: UIViewController {
     
     //MARK:- uiHandler
     ///handels the ui elements and its states
-    func uiHandler(){
+   private func uiHandler(){
         albumsTableView.register(UINib(nibName: Constants.shared.albumCell, bundle: nil), forCellReuseIdentifier: Constants.shared.albumCell)
         pickerButton.isEnabled = false
         userControlView.isHidden = true
@@ -58,7 +58,7 @@ class ProfileVC: UIViewController {
     
     //MARK:- bind Data
     /// binding Data and updates UI Elemnts
-    func bindData(){
+    private func bindData(){
         subscribeToLoading()
         subscribeToNetworkError()
         usersSelection()
@@ -69,8 +69,11 @@ class ProfileVC: UIViewController {
     
     //MARK:- Loading control
     /// show and hide spinner by listening to the loading state from ViewModel
-    func subscribeToLoading(){
-        profileVM.loadingBehavior.subscribe(onNext: { (isLoading) in
+    private func subscribeToLoading(){
+        profileVM
+            .loadingBehavior
+            .asDriver()
+            .drive(onNext: { (isLoading) in
             if isLoading {
                 self.showSpinner()
             }else{
@@ -81,8 +84,11 @@ class ProfileVC: UIViewController {
     
     //MARK:- Network errors Binding
     /// get the network error if exist
-    func subscribeToNetworkError(){
-        profileVM.networkErrorBehavior.subscribe(onNext: { (error) in
+    private func subscribeToNetworkError(){
+        profileVM
+            .networkErrorBehavior
+            .asDriver()
+            .drive(onNext: { (error) in
             if error != ""{
             self.createWarning(message: error)
             }
@@ -91,13 +97,17 @@ class ProfileVC: UIViewController {
     
     //MARK:-usersSelection
     /// this function subscribes which user has been choosen from the picker view and updates the UI elements
-    func usersSelection(){
-        usersPickerView.rx.modelSelected(UsersModel.self).observe(on: MainScheduler.instance).catchAndReturn([]).subscribe{[weak self] model in
+
+    private func usersSelection(){
+        usersPickerView
+            .rx
+            .modelSelected(UsersModel.self)
+            .asDriver()
+            .drive{[weak self] user in
             guard let self = self else {return}
-            guard let model = model.element?[0] else {return}
-            self.userId = model.id ?? 0
-            self.nameLabel.text = model.name ?? ""
-            self.addressLabel.text = "\(model.address?.city ?? "") \(model.address?.suite ?? "") \(model.address?.street ?? "")"
+            self.userId = user[0].id ?? 0
+            self.nameLabel.text = user[0].name ?? ""
+            self.addressLabel.text = "\(user[0].address?.city ?? "") \(user[0].address?.suite ?? "") \(user[0].address?.street ?? "")"
             
             self.profileVM.userIdBehavior.accept(self.userId)
         }.disposed(by: disposeBag)
@@ -105,11 +115,14 @@ class ProfileVC: UIViewController {
     
     //MARK:- user subscribtion
     ///this funcntion subscribes the users data and updates the pickerView
-    func usersSubscribtion(){
+
+    private func usersSubscribtion(){
         profileVM
-            .usersObservable
-            .observe(on: MainScheduler.instance)
-            .catchAndReturn([]).bind(to: self.usersPickerView.rx.itemTitles){[weak self] row, element in
+            .usersDriver
+            .asDriver()
+            .drive(self.usersPickerView
+                    .rx
+                    .itemTitles){[weak self] row, element in
                 if element.id == 1{
                     self?.nameLabel.text = element.name
                     self?.addressLabel.text = "\(element.address?.city ?? "") \(element.address?.suite ?? "") \(element.address?.street ?? "")"
@@ -121,28 +134,31 @@ class ProfileVC: UIViewController {
     
     //MARK:-albums selection
     /// this function subscribes which album has been choosen from the table view and navigate to the photosVC
-    func albumsSelection(){
-        albumsTableView.rx.modelSelected(AlbumsModel.self).subscribe{[weak self] result in
+
+    private func albumsSelection(){
+        albumsTableView
+            .rx
+            .modelSelected(AlbumsModel.self)
+            .asDriver()
+            .drive{[weak self] result in
             guard let self = self else {return}
             if let vc = self.storyboard?.instantiateViewController(withIdentifier: Constants.shared.photosVC) as? PhotosVC{
-//                vc.albumVM.albumIdBehavior.accept(result.element?.id ?? 0)
-                vc.albumId = result.element?.id
-                vc.albumName = result.element?.title
+                vc.albumId = result.id
+                vc.albumName = result.title
                 self.navigationController?.pushViewController(vc, animated: true)
             }
         }.disposed(by: disposeBag)
-        
     }
-    
-    
+
     //MARK:- albums subscribtion
     ///this funcntion subscribes the albums data and updates the tableview
-    func albumsSubscribtion(){
+    private func albumsSubscribtion(){
         profileVM
-            .albumsObservable
-            .observe(on: MainScheduler.instance)
-            .catchAndReturn([])
-            .bind(to: self.albumsTableView.rx.items(cellIdentifier: Constants.shared.albumCell, cellType: AlbumsCell.self)){row, item , cell in
+            .albumsDriver
+            .asDriver()
+            .drive(self.albumsTableView
+                    .rx
+                    .items(cellIdentifier: Constants.shared.albumCell, cellType: AlbumsCell.self)){row, item , cell in
             cell.albumLabel.text = item.title
         }.disposed(by: disposeBag)
     }

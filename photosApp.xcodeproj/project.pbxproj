@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		180B6FE4276F53AE008BFD82 /* photoViewerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 180B6FE3276F53AE008BFD82 /* photoViewerVC.swift */; };
 		9468D03F276DFE7100493F10 /* PhotosVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9468D03E276DFE7100493F10 /* PhotosVC.swift */; };
 		9468D043276E025000493F10 /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9468D041276E025000493F10 /* PhotoCell.swift */; };
 		9468D044276E025000493F10 /* PhotoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9468D042276E025000493F10 /* PhotoCell.xib */; };
@@ -38,6 +39,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+
+		180B6FE3276F53AE008BFD82 /* photoViewerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = photoViewerVC.swift; sourceTree = "<group>"; };
 		9468D03E276DFE7100493F10 /* PhotosVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosVC.swift; sourceTree = "<group>"; };
 		9468D041276E025000493F10 /* PhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
 		9468D042276E025000493F10 /* PhotoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PhotoCell.xib; sourceTree = "<group>"; };
@@ -151,6 +154,7 @@
 				94BCCE1D27692B7E0043A1DB /* Main.storyboard */,
 				94BCCE1B27692B7E0043A1DB /* ProfileVC.swift */,
 				9468D03E276DFE7100493F10 /* PhotosVC.swift */,
+				180B6FE3276F53AE008BFD82 /* photoViewerVC.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -314,6 +318,7 @@
 				949C98B0276E1D1500243269 /* Constants.swift in Sources */,
 				9468D043276E025000493F10 /* PhotoCell.swift in Sources */,
 				9468D03F276DFE7100493F10 /* PhotosVC.swift in Sources */,
+				180B6FE4276F53AE008BFD82 /* photoViewerVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

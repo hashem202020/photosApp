@@ -16,20 +16,21 @@ enum UserService {
 
 extension UserService: TargetType{
     var baseURL: URL {
-        return URL(string: "https://jsonplaceholder.typicode.com") ?? URL(string: "www.google.com")!
+        return URL(string: Constants.shared.baseUrl) ?? URL(string: "www.google.com")!
     }
     
     var path: String {
         switch self {
         case .readUsers:
-            return "/users"
-        case .readAlbums(_):
+            return Constants.shared.usersPath
             
-            return "/albums"
+        case .readAlbums(_):
+            return Constants.shared.albumsPath
+            
         case .readPhotos(_):
-            return "/photos"
+            return Constants.shared.photosPath
                 }
-    }
+        }
     
     var method: Moya.Method {
         switch self{
@@ -39,7 +40,6 @@ extension UserService: TargetType{
             return .get
         case .readPhotos(_):
             return .get
-        
         }
     }
     
@@ -53,13 +53,10 @@ extension UserService: TargetType{
             return .requestParameters(parameters: ["albumId": albumId], encoding: URLEncoding.queryString)
 
         }
-        
-//        return .requestPlain
     }
     
     var headers: [String : String]? {
         return nil
-//        return ["Content-Type":"application/json"]
     }
     
 }

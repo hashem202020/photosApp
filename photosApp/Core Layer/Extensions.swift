@@ -11,7 +11,7 @@ import Kingfisher
 fileprivate var aView: UIView?
 extension UIViewController{
     //MARK:- spinner
-    /// this function showing a spinner on the screen ,, use it when waiting the API Response
+    /// this function showing a spinner on the screen
     func showSpinner(){
          aView = UIView(frame: self.view.bounds)
         aView?.backgroundColor = UIColor.init(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5)
@@ -27,9 +27,7 @@ extension UIViewController{
     /// this function removes  the spinner on the screen
     func removeSpinner(){
         if let removeView = self.view.viewWithTag(100){
-            removeView.removeFromSuperview()
-//        aView = nil
-        
+            removeView.removeFromSuperview()        
         }
     }
     

@@ -13,49 +13,41 @@ import RxCocoa
 class AlbumViewModel{
     
     //MARK:- variables
-    
+
     ///Listen to the loading status
     var loadingBehavior = BehaviorRelay<Bool>(value: false)
     
     ///Listen to the network error
     var networkErrorBehavior = BehaviorRelay<String>(value: "")
     
-    ///Listen to the albumID value
+    ///Listening to the albumID value
     var albumIdBehavior = BehaviorRelay<Int>(value: 0)
     
-    lazy var albumIdObservable = albumIdBehavior.asObservable()
+    //listening to search value
+    var searchValueBehavior = BehaviorRelay<String>(value: "")
+    ///Driver trait of search value
+    private lazy var searchValueDriver = searchValueBehavior.asDriver(onErrorJustReturn: "")
+    
+    /// `main photos` Data
+    private var photosSubject = ReplaySubject<[photosModel]>.create(bufferSize: 1)
+    ///`main photos` data driver
+    private lazy var photosDriver: Driver<[photosModel]> = photosSubject.asDriver(onErrorJustReturn: [])
 
-    //Encapsulating photos Data
-    private var photosSubject = PublishSubject<[photosModel]>()
-    //Getter
-    lazy var photosObservable: Observable<[photosModel]> = photosSubject.asObservable()
-        
-    private var filteredPhotosSubject = PublishSubject<[photosModel]>()
-    
-    lazy var filteredPhotosObservable: Observable<[photosModel]> = filteredPhotosSubject.asObservable()
-    
-    
-    var searchValue = BehaviorRelay<String>(value: "")
-    
-    lazy var searchValueObservable = searchValue.asObservable()
+    //Encapsulating filtered photos Data
+    private var filteredPhotosSubject = ReplaySubject<[photosModel]>.create(bufferSize: 1)
+    ///`filtered photos` data driver
+    lazy var filteredPhotosDriver: Driver<[photosModel]> = filteredPhotosSubject.asDriver(onErrorJustReturn: [])
     
     /// network services
     private let userProvider = MoyaProvider<UserService>()
     
     let disposeBag = DisposeBag()
     
+
+    //MARK:- initializer
     init() {
-        searchValueObservable.subscribe (onNext: { (value) in
-            print("search value \(value)")
-            self.photosObservable.map({$0.filter({
-                if value.isEmpty{return true}
-                return ($0.title?.lowercased().contains(value.lowercased()))!
-            })
-            
-            }).bind(to: self.filteredPhotosSubject)
-            .disposed(by: self.disposeBag)
-        }).disposed(by: disposeBag)
-    }
+        searching()
+        }
     
     
     //MARK:- fetch photos Data
@@ -78,5 +70,21 @@ class AlbumViewModel{
         }
     }
     
+
+    //MARK:-searching
+    ///this fnction handles searching ,, listening to the search value ,,filter the existed sequence and refresh the filterd sequence with result
+    private func searching() {
+        searchValueDriver
+            .drive (onNext: {[weak self] (value) in
+                guard let self = self else {return}
+                self.photosDriver
+                    .map({$0.filter({
+                        if value.isEmpty{return true}
+                        return ($0.title?.lowercased().contains(value.lowercased()))!
+                    })
+                    }).drive(self.filteredPhotosSubject)
+                    .disposed(by: self.disposeBag)
+            }).disposed(by: disposeBag)
+    }
 
 }

@@ -26,13 +26,13 @@ class ProfileViewModel {
     //Encapsulating users Data
     private var usersSubject = PublishSubject<[UsersModel]>()
     //Getter
-    lazy var usersObservable: Observable<[UsersModel]> = usersSubject.asObservable()
-    
+
+    lazy var usersDriver: Driver<[UsersModel]> = usersSubject.asDriver(onErrorJustReturn: [])
     
     //Encapsulating albums Data
     private var albumsSubject = PublishSubject<[AlbumsModel]>()
     //Getter
-    lazy var albumsObservable: Observable<[AlbumsModel]> = albumsSubject.asObservable()
+    lazy var albumsDriver: Driver<[AlbumsModel]> = albumsSubject.asDriver(onErrorJustReturn: [])
     
     /// network services 
     private let userProvider = MoyaProvider<UserService>()
@@ -45,8 +45,7 @@ class ProfileViewModel {
     
     //MARK:- requests group
     /// this function requests two APIs (users & albums) in a dispatch group
-    func fetchData(){
-
+   private func fetchData(){
         group.enter()
         fetchUserData()
         
@@ -57,10 +56,9 @@ class ProfileViewModel {
     
     //MARK:- fetch User Data
     /// function to request users from API
-    func fetchUserData(){
+   private func fetchUserData(){
         userProvider.request(.readUsers) {[weak self] (result) in
             guard let self = self else {return}
-
             switch result{
             case .success(let response):
                 do{
