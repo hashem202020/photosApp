@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotoCell" id="gTV-IL-0wX" customClass="PhotoCell" customModule="photosApp" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="155" height="147"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="155" height="147"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="kingfisher-1.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="OHP-0n-3LA">
+                        <rect key="frame" x="0.0" y="0.0" width="155" height="147"/>
+                    </imageView>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="OHP-0n-3LA" secondAttribute="trailing" id="0qW-Rg-EKW"/>
+                <constraint firstAttribute="bottom" secondItem="OHP-0n-3LA" secondAttribute="bottom" id="KdM-M1-EGY"/>
+                <constraint firstItem="OHP-0n-3LA" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="RG0-Wf-nPW"/>
+                <constraint firstItem="OHP-0n-3LA" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="Z6T-QX-H1X"/>
+            </constraints>
+            <size key="customSize" width="155" height="147"/>
+            <connections>
+                <outlet property="photo" destination="OHP-0n-3LA" id="c4r-lc-4PP"/>
+            </connections>
+            <point key="canvasLocation" x="163.04347826086959" y="84.040178571428569"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="kingfisher-1.jpg" width="250" height="250"/>
+    </resources>
+</document>
